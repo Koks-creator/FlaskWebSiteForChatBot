@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+   <div class="jumbatronBig">
+       <div class="px-2 scroll" id="sc" style="height: 460px;">
+           <div id="BotMessages" align="left">
+                <img src="{{ url_for('static', filename='images/bot.png') }}" class="botImg">
+                <div class="userMsg">
+                    Hello, my name is Konon Bot! And you?
+                </div>
+           </div>
+
+           <div id="UserMessages" align="right">
+                <div class="emptyMsg">
+                    Hello, my name is Konon Bot! And you?
+                </div>
+           </div>
+       </div>
+        <form onsubmit="return false">
+            <div class="input-group" style="margin-top: 20px;">
+               <input type="text" class="form-control" id="msgInput">
+               <button type="submit" onclick="update_chat()" class="btn btn-secondary" style="font-size: 18px;">Send</button>
+            </div>
+        </form>
+   </div>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+     function update_chat() {
+        // appending user message, appending hidden one for bot
+        let user_msg = document.getElementById("msgInput");
+
+        let message = user_msg.value.trim();
+        if (message.length) {
+
+            const UserMsgNode = document.createElement('div');
+            const EmptyBotNode = document.createElement('div');
+            const userImg = document.createElement('img');
+
+            var rawText = $("#msgInput").val();
+
+            userImg.className = "userImg";
+            userImg.src = "{{ url_for('static', filename='images/person.png') }}"
+            document.getElementById('UserMessages').appendChild(userImg);
+
+            UserMsgNode.className = "userMsg";
+            UserMsgNode.innerHTML = user_msg.value;
+            document.getElementById('UserMessages').appendChild(UserMsgNode)
+
+            EmptyBotNode.className = "emptyMsg";
+            EmptyBotNode.innerHTML = user_msg.value;
+            document.getElementById('BotMessages').appendChild(EmptyBotNode);
+
+            $.get("/get", { msg: rawText }).done(function(data) {
+                // bot answer
+                const img = document.createElement('img');
+                img.className = "botImg";
+                img.src = "{{ url_for('static', filename='images/bot.png') }}"
+                document.getElementById('BotMessages').appendChild(img);
+
+                const BotAnsNode = document.createElement('div');
+                BotAnsNode.className = "userMsg";
+                BotAnsNode.innerHTML = data;
+                document.getElementById('BotMessages').appendChild(BotAnsNode);
+
+
+                const EmptyUserNode = document.createElement('div');
+                EmptyUserNode.className = "emptyMsg";
+                EmptyUserNode.innerHTML = data;
+                document.getElementById('UserMessages').appendChild(EmptyUserNode);
+                })
+        }
+        user_msg.value = '';
+        user_msg.focus();
+    }
+</script>
+{% endblock content %}
