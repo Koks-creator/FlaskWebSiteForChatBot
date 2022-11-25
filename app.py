@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 import pandas as pd
-from ChatBot.chatbotPipelines.Pipelines import setup_prediction_pipeline
+from Pipelines import setup_prediction_pipeline
 
 app = Flask(__name__)
 app.secret_key = 'fdgdfg45e45e4tgd'
@@ -8,11 +8,11 @@ app.secret_key = 'fdgdfg45e45e4tgd'
 prediction_pipeline = setup_prediction_pipeline(
     target_column_name="X",
     max_length=10,
-    tokenizer_path=r"..\tokenizer2.pkl",
-    label_encoder_path=r"..\label_encoder2.pkl",
+    tokenizer_path=r"tokenizer2.pkl",
+    label_encoder_path=r"\label_encoder2.pkl",
     unique_words_path=f"",
-    model_path=r"..\ChatBotIntentsModel3.h5",
-    intents_path=r"..\intents4.json"
+    model_path=r"\ChatBotIntentsModel3.h5",
+    intents_path=r"intents4.json"
 )
 
 
